@@ -1,15 +1,8 @@
 # UCI ML Repository Downloader
 The UCI Machine Learning Repository is a collection of databases, domain theories, and data generators that are used by the machine learning community for the empirical analysis of machine learning algorithms. It is used by students, educators, and researchers all over the world as a primary source of machine learning data sets. As an indication of the impact of the archive, it has been cited over 1000 times. [re3data.org]
 
-<style>
-.center {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-  width: 50%;
-}
-</style>
-<img src = "etc/logo.gif" class = "center">
+
+<p align = "center"><img src = "etc/logo.gif" class = "center"></p>
 
 ### Reqirements
 
