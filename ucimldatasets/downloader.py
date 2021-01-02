@@ -1,12 +1,36 @@
-import re, optparse
+import csv, re, optparse, notify2
 
 from bs4 import BeautifulSoup
-import urllib.request, requests
+import urllib.request
 
 from Hyperlink import Download, OpenLink
 
 
-URL = "https://archive.ics.uci.edu/ml/"
+class Dataset():
+    def __init__(self, name):
+        if name:
+            self.name = name
+        else:
+            raise Exception(f"Error: {name} not found.")
+        self.website_url = "https://archive.ics.uci.edu/ml/"
+        with open("uci_datasets_details.csv", newline = "\n") as csvfile:
+            datareader = csv.reader(csvfile, delimiter = ",")
+    
+    @staticmethod
+    def list(cls):
+        pass
+    
+    def __len__(self):
+        pass
+
+    def __getitem__(self, name):
+        """
+        arguments: provide name of dataset
+        returns: provide information of that dataset
+        """
+        pass
+
+    
 
 def get_datasets_link(URL):
     
@@ -28,14 +52,21 @@ def get_datasets_link(URL):
 if __name__ == '__main__':
     parser = optparse.OptionParser()
     parser.add_option('--save_to', dest = "save_to", help = "download location")
-    parser.add_option('--num_workers', dest = "num_workers", help = "Numbers of threads to be used")
+    parser.add_option('--num_threads', dest = "num_threads", help = "Numbers of threads to be used")
 
     (options, arguments) = parser.parse_args()
     save_to = options.save_to
-    num_workers = int(options.num_workers)
+    num_threads = int(options.num_threads)
     i = 1
     
-    for link in get_datasets_link(URL):
+    notify2.init("Download Notifier")
+    n = notify2.Notification(None, icon = "etc/thumbnail.png")
+    n.set_urgency(notify2.URGENCY_NORMAL)
+    n.set_timeout(2000)
+
+    links = get_datasets_link(URL)
+    print(links)
+    for link in links:
         pattern = r'href="../machine-learning-databases/.+'
         data_folder_link = re.findall(pattern, OpenLink(URL + link))[0][8:-7]
         
@@ -45,9 +76,11 @@ if __name__ == '__main__':
         for l in downloadable_links:
             dl_url = URL + 'machine-learning-databases/' + folder_name + '/' + l
             saving_dir = save_to + 'UCI-ML-DATASETS/' + str(i) + '.' + folder_name + '/'
-            print(f"Downloading : {folder_name}", end = "\r")
             Download(url = dl_url, 
                      saving_dir = saving_dir, 
                      filename = l, 
-                     num_workers = num_workers)
+                     num_threads = num_threads)
+            n.update("UCI ML Repository Downloader", f"Downloaded : {folder_name}")
+            # print(f"Downloaded : {folder_name}", end = "\r")
+            n.show()
         i+=1

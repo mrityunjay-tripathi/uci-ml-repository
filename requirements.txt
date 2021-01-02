@@ -1,0 +1,3 @@
+lxml
+notify2
+bs4

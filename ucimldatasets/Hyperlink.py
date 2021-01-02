@@ -11,18 +11,21 @@ def Handler(url, saving_dir, filename, start, end):
             if chunk:
                 f.write(chunk)
 
-def Download(url, saving_dir, filename, num_workers = 1):
+def Download(url, saving_dir, filename, num_threads = 4):
     file_size = requests.head(url).headers['content-length']
-    part = int(file_size)//num_workers
-    remaining = int(file_size)%num_workers
+    part = int(file_size) // num_threads
+    remaining = int(file_size) % num_threads
 
-    for i in range(num_workers):
-        start = i*part
-        if i==num_workers-1:
-            end = start + part + remaining
-        end = start + part
+    for i in range(num_threads):
+        start = i * part
+        end = start + part + remaining if i == num_threads - 1 else start + part
+        
         t = threading.Thread(target = Handler, 
-                             kwargs = {'url':url, 'saving_dir':saving_dir, 'start':start, 'end':end, 'filename':filename})
+                             kwargs = {'url':url, 
+                                       'saving_dir':saving_dir, 
+                                       'start':start, 
+                                       'end':end, 
+                                       'filename':filename})
         t.setDaemon(True)
         t.start()
     
