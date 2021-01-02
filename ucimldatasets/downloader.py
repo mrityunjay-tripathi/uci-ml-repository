@@ -3,34 +3,7 @@ import csv, re, optparse, notify2
 from bs4 import BeautifulSoup
 import urllib.request
 
-from Hyperlink import Download, OpenLink
-
-
-class Dataset():
-    def __init__(self, name):
-        if name:
-            self.name = name
-        else:
-            raise Exception(f"Error: {name} not found.")
-        self.website_url = "https://archive.ics.uci.edu/ml/"
-        with open("uci_datasets_details.csv", newline = "\n") as csvfile:
-            datareader = csv.reader(csvfile, delimiter = ",")
-    
-    @staticmethod
-    def list(cls):
-        pass
-    
-    def __len__(self):
-        pass
-
-    def __getitem__(self, name):
-        """
-        arguments: provide name of dataset
-        returns: provide information of that dataset
-        """
-        pass
-
-    
+from Hyperlink import Download, OpenLink    
 
 def get_datasets_link(URL):
     
